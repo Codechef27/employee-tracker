@@ -32,11 +32,11 @@ VALUES
     ('Gordon', 'Ramsey', 5, 1),
     ('Cat', 'Cora', 5, 1),
     ('Julia', 'Child', 6, NULL),
-    ('Rachael', 'Ray', 7, 6),
-    ('Giada', 'Laurentiis', 8, 6),
-    ('Anne', 'Burrell', 8, 6),
-    ('Wolfgang', 'Puck', 9, 6),
-    ('Paula', 'Deen', 10, 6);
+    ('Rachael', 'Ray', 7, 10),
+    ('Giada', 'Laurentiis', 8, 10),
+    ('Anne', 'Burrell', 8, 10),
+    ('Wolfgang', 'Puck', 9, 10),
+    ('Paula', 'Deen', 10, 10);
 
 
 

@@ -1,9 +1,5 @@
 // GIVEN a command-line application that accepts user input
 
-// WHEN I choose to view all employees
-// THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, 
-// job titles, departments, salaries, and managers that the employees report to
-
 // WHEN I choose to add a department
 // THEN I am prompted to enter the name of the department and that department is added to the database
 
@@ -66,6 +62,9 @@ const options = () => {
         else if (data.choices === 2 ) {
             viewAllRoles();
         }
+        else if (data.choices === 3) {
+            viewAllEmployees();
+        }
         
         
         else if (data.choices === 8) {
@@ -99,5 +98,29 @@ const viewAllRoles = () => {
     });    
 
 };
+
+// WHEN I choose to view all employees
+// THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, 
+// job titles, departments, salaries, and managers that the employees report to
+
+const viewAllEmployees = () => {
+    const sql = `SELECT 
+    concat(employees.first_name, " ", employees.last_name) AS Name,
+    concat(manager.first_name, " ", manager.last_name) AS 'Manager Name',
+    roles.title AS 'Job Title',
+    roles.salary AS 'Salary',
+    department.name AS 'Department'
+    FROM employees 
+    LEFT JOIN roles ON employees.role_id = roles.id
+    LEFT JOIN department ON roles.department_id = department.id
+    LEFT JOIN employees manager ON employees.manager_id = manager.id`;
+    
+
+    db.query(sql, (err, rows) => {
+        if (err) throw err;
+        console.table(rows);
+        options();
+    }) 
+}
 
 options();
