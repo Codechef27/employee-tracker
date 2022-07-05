@@ -40,10 +40,48 @@ const consoleTable = require('console.table');
 // WHEN I start the application
 // THEN I am presented with the following options: view all departments, view all roles, view all employees, 
 // add a department, add a role, add an employee, and update an employee role
+// Bonus criteria = View employees by manager, View employees by department, Delete departments, roles, and employees,
+// View the total utilized budget of a department—in other words, the combined salaries of all employees in that-
+// department.
 const options = () => {
     inquirer.prompt (
         [
             {
-                
-            }]) 
+                type: 'list',
+                name: 'choices',
+                message: 'What would you like to do?',
+                choices: [
+                    { name: 'View all Departments', value: 1},
+                    { name: 'View all Roles', value: 2 },
+                    { name: 'View all employees', value: 3 },
+                    { name: 'Add a department', value: 4 }, 
+                    { name: 'Add a Role', value: 5 },
+                    { name: 'Add an employee', value: 6 },
+                    { name: 'Update an employee role', value: 7 },
+                    { name: 'Quit' , value: 8}
+
+                ]
+
+            }
+        ]
+    ) 
+
+    .then((data) => {
+        if ( data.choices === 1 ) {
+            viewAllDepartments()
+        } else if (data.choices === 8) {
+            db.end()
+        }
+    })
+};
+
+const viewAllDepartments = () => {
+    const sql = `SELECT * FROM department`;
+    db.query(sql, (err, rows) => {
+        if (err) throw err;
+        console.table(rows);
+        options();
+    })
 }
+
+options();
