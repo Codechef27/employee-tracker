@@ -1,12 +1,5 @@
 // GIVEN a command-line application that accepts user input
 
-
-// WHEN I choose to view all departments
-// THEN I am presented with a formatted table showing department names and department ids
-
-// WHEN I choose to view all roles
-// THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
-
 // WHEN I choose to view all employees
 // THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, 
 // job titles, departments, salaries, and managers that the employees report to
@@ -68,12 +61,21 @@ const options = () => {
 
     .then((data) => {
         if ( data.choices === 1 ) {
-            viewAllDepartments()
-        } else if (data.choices === 8) {
-            db.end()
+            viewAllDepartments();
+        } 
+        else if (data.choices === 2 ) {
+            viewAllRoles();
+        }
+        
+        
+        else if (data.choices === 8) {
+            db.end();
         }
     })
 };
+
+// WHEN I choose to view all departments
+// THEN I am presented with a formatted table showing department names and department ids
 
 const viewAllDepartments = () => {
     const sql = `SELECT * FROM department`;
@@ -81,7 +83,21 @@ const viewAllDepartments = () => {
         if (err) throw err;
         console.table(rows);
         options();
-    })
-}
+    });
+};
+
+// WHEN I choose to view all roles
+// THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+
+const viewAllRoles = () => {
+    const sql = `SELECT roles.title, roles.id, roles.salary, department.name AS 'department' FROM roles 
+    JOIN department ON roles.department_id = department.id`;
+    db.query(sql, (err, rows) => {
+        if (err) throw err;
+        console.table(rows);
+        options();
+    });    
+
+};
 
 options();
