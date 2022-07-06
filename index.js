@@ -12,9 +12,6 @@ const consoleTable = require('console.table');
 // WHEN I start the application
 // THEN I am presented with the following options: view all departments, view all roles, view all employees, 
 // add a department, add a role, add an employee, and update an employee role
-// Bonus criteria = View employees by manager, View employees by department, Delete departments, roles, and employees,
-// View the total utilized budget of a department—in other words, the combined salaries of all employees in that-
-// department.
 const options = () => {
     inquirer.prompt ([
             {
