@@ -59,6 +59,8 @@ const options = () => {
             viewAllEmployees();
         } else if (data.choices === 4) {
             addDepartment();
+        } else if (data.choices === 5) {
+            addRole();
         }
         
         else if (data.choices === 8) {
@@ -115,7 +117,7 @@ const viewAllEmployees = () => {
         console.table(rows);
         options();
     }) 
-}
+};
 
 // WHEN I choose to add a department
 // THEN I am prompted to enter the name of the department and that department is added to the database
@@ -145,6 +147,66 @@ const addDepartment = () => {
             options();
         })
     })  
+};
+
+const addRole = () => {
+  const sql = "SELECT * FROM department";
+  db.query(sql, (err, res) => {
+    if (err) throw err;
+    let departments = res.map((department) => department.name);
+
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "newRole",
+          message: "Enter the new job title:",
+          validate: (newRole) => {
+            if (newRole) {
+              return true;
+            } else {
+              console.log("You must enter a new job title!");
+              return false;
+            }
+          },
+        },
+        {
+          type: "input",
+          name: "salary",
+          message: "Enter the salary for this role:",
+          validate: (salary) => {
+            if (salary) {
+              return true;
+            } else {
+              console.log("You must enter a salary for this new role");
+            }
+          },
+        },
+        {
+          type: "list",
+          name: "departmentIds",
+          message: "Select a deparment for your new role:",
+          choices: departments,
+        },
+      ])
+
+      .then((data) => {
+        let deparmentId;
+        let newRole = [data.newRole, data.salary];
+        for (let i = 0; i < res.length; i++) {
+            if (data.departmentIds = res[i].name) {
+                deparmentId = res[i].id;
+            }
+        }
+
+        const sql = `INSERT INTO roles (title, salary, department_id) VALUES (?,?,${deparmentId})`;
+        db.query(sql, newRole, (err, rows) => {
+          if (err) throw err;
+          console.table(rows);
+          options();
+        });
+      });
+  });
 };
 
 
