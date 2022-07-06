@@ -1,9 +1,5 @@
 // GIVEN a command-line application that accepts user input
 
-// WHEN I choose to add an employee
-// THEN I am prompted to enter the employee’s first name, last name, role, and manager, 
-// and that employee is added to the database
-
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is 
 // updated in the databaseUpdate employee managers.
@@ -14,7 +10,8 @@
 
 // Delete departments, roles, and employees.
 
-// View the total utilized budget of a department—in other words, the combined salaries of all employees in that department.
+// View the total utilized budget of a department—in other words, the combined salaries of all employees 
+//in that department.
 
 const db = require('./db/connection');
 const inquirer = require('inquirer');
@@ -58,6 +55,10 @@ const options = () => {
             addDepartment();
         } else if (data.choices === 5) {
             addRole();
+        } else if (data.choices === 6) {
+          addEmployee();
+        } else if (data.choices === 7) {
+          updateEmployeesRole();
         }
         
         else if (data.choices === 8) {
@@ -201,6 +202,76 @@ const addRole = () => {
 
         const sql = `INSERT INTO roles (title, salary, department_id) VALUES (?,?,${deparmentId})`;
         db.query(sql, newRole, (err, rows) => {
+          if (err) throw err;
+          console.table(rows);
+          options();
+        });
+      });
+  });
+};
+
+// WHEN I choose to add an employee
+// THEN I am prompted to enter the employee’s first name, last name, role, and manager, 
+// and that employee is added to the database
+
+addEmployee = () => {
+  const sql = "SELECT * FROM roles";
+  db.query(sql, (err, res) => {
+    if (err) throw err;
+    let roleTitles = res.map((role) => role.title);
+
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "first_name",
+          message: "Enter the new employee's first name:",
+          validate: (firstName) => {
+            if (firstName) {
+              return true;
+            } else {
+              console.log("You must enter a first name!");
+              return false;
+            }
+          },
+        },
+        {
+          type: "input",
+          name: "last_name",
+          message: "Enter the new employee's last name:",
+          validate: (lastName) => {
+            if (lastName) {
+              return true;
+            } else {
+              console.log("You must enter a last name!");
+            }
+          },
+        },
+        {
+          type: "list",
+          name: "roleList",
+          message: "Select a role for your new employee:",
+          choices: roleTitles,
+        },
+        {
+          type: "list",
+          name: "managerList",
+          message: "Select a manager's id for your new employee, (1 for Chef) (10 for General Manager):",
+          choices: [1, 10],
+        }, 
+      ])
+
+      .then((data) => {
+        let roleId;
+        for (let i = 0; i < res.length; i++) {
+            if (data.roleList === res[i].title) {
+                roleId = res[i].id;
+            }
+        }
+
+        const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) 
+        VALUES ("${data.first_name}","${data.last_name}",${roleId},${data.managerList})`;
+        db.query(sql, (err, rows) => {
           if (err) throw err;
           console.table(rows);
           options();
