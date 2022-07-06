@@ -46,4 +46,4 @@
   * Email Me:  bradleyjkennett@gmail.com
 
   ## Screen Shot
-  ![image](./assets/screenshot/Screenshot%20(23)%20-%20Shortcut.lnk)
+  ![image](./assets/screenshot/Screenshot%20(23).png)
