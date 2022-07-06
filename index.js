@@ -1,8 +1,5 @@
 // GIVEN a command-line application that accepts user input
 
-// WHEN I choose to add a department
-// THEN I am prompted to enter the name of the department and that department is added to the database
-
 // WHEN I choose to add a role
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
 
@@ -33,8 +30,7 @@ const consoleTable = require('console.table');
 // View the total utilized budget of a department—in other words, the combined salaries of all employees in that-
 // department.
 const options = () => {
-    inquirer.prompt (
-        [
+    inquirer.prompt ([
             {
                 type: 'list',
                 name: 'choices',
@@ -52,20 +48,18 @@ const options = () => {
                 ]
 
             }
-        ]
-    ) 
+        ]) 
 
     .then((data) => {
         if ( data.choices === 1 ) {
             viewAllDepartments();
-        } 
-        else if (data.choices === 2 ) {
+        } else if (data.choices === 2 ) {
             viewAllRoles();
-        }
-        else if (data.choices === 3) {
+        } else if (data.choices === 3) {
             viewAllEmployees();
+        } else if (data.choices === 4) {
+            addDepartment();
         }
-        
         
         else if (data.choices === 8) {
             db.end();
@@ -122,5 +116,37 @@ const viewAllEmployees = () => {
         options();
     }) 
 }
+
+// WHEN I choose to add a department
+// THEN I am prompted to enter the name of the department and that department is added to the database
+
+const addDepartment = () => {
+    inquirer.prompt ([
+            {
+                type: 'input',
+                name: 'addDepartment',
+                message: ' Enter the new department name',
+                validate: newDepartment => {
+                    if (newDepartment) {
+                        return true;
+                    } else {
+                        console.log('You must enter a new department name!');
+                        return false
+                    }
+                }
+            }
+        ])   
+
+    .then(data => {
+        const sql = `INSERT INTO department (name) VALUES (?)`
+        db.query(sql, data.addDepartment, (err, rows) => {
+            if (err) throw err;
+            console.table(rows);
+            options();
+        })
+    })  
+};
+
+
 
 options();
