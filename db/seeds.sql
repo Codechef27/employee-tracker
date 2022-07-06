@@ -37,7 +37,3 @@ VALUES
     ('Anne', 'Burrell', 8, 10),
     ('Wolfgang', 'Puck', 9, 10),
     ('Paula', 'Deen', 10, 10);
-
-
-
-

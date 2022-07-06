@@ -1,9 +1,5 @@
 // GIVEN a command-line application that accepts user input
 
-// WHEN I choose to update an employee role
-// THEN I am prompted to select an employee to update and their new role and this information is 
-// updated in the databaseUpdate employee managers.
-
 // View employees by manager.
 
 // View employees by department.
@@ -58,7 +54,7 @@ const options = () => {
         } else if (data.choices === 6) {
           addEmployee();
         } else if (data.choices === 7) {
-          updateEmployeesRole();
+          updateEmployeeRole();
         }
         
         else if (data.choices === 8) {
@@ -151,7 +147,7 @@ const addDepartment = () => {
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
 
 const addRole = () => {
-  const sql = "SELECT * FROM department";
+  const sql = `SELECT * FROM department`;
   db.query(sql, (err, res) => {
     if (err) throw err;
     let departments = res.map((department) => department.name);
@@ -215,7 +211,7 @@ const addRole = () => {
 // and that employee is added to the database
 
 addEmployee = () => {
-  const sql = "SELECT * FROM roles";
+  const sql = `SELECT * FROM roles`;
   db.query(sql, (err, res) => {
     if (err) throw err;
     let roleTitles = res.map((role) => role.title);
@@ -277,6 +273,59 @@ addEmployee = () => {
           options();
         });
       });
+  });
+};
+
+// WHEN I choose to update an employee role
+// THEN I am prompted to select an employee to update and their new role and this information is 
+// updated in the databaseUpdate employee managers.
+
+updateEmployeeRole = () => {
+  const roleSql = `SELECT * FROM roles`;
+  db.query(roleSql, (err, roleRes) => {
+    if (err) throw err;
+    let roleResults = roleRes.map((roles) => roles.title);
+    const empSql = `SELECT * FROM employees`;
+    db.query(empSql, (err, res) => {
+      if (err) throw err;
+      let employeeResults = res.map((employee) => `${employee.first_name} ${employee.last_name}`);
+
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "employees",
+            message: 'Choose which employee to update',
+            choices: employeeResults,
+          },
+          {
+            type: "list",
+            name: "roles",
+            message: 'Choose a new role for the employee',
+            choices: roleResults,
+          },
+        ])
+        .then((data) => {
+          let roleId;
+          let employeeId;
+          for(let i = 0; i < roleRes.length; i++) {
+            if (data.roles === roleRes[i].title) {
+              roleId = roleRes[i].id;
+            }
+          }
+
+          for (let i = 0; i < res.length; i++){
+            if (data.employees === `${res[i].first_name} ${res[i].last_name}`) {
+              employeeId = res[i].id;
+            }
+          }
+          const sql = `UPDATE employees SET role_id = ${roleId} WHERE id = ${employeeId}`;
+          db.query(sql, (err, res) => {
+            if (err) throw err;
+            options();
+          })
+        });
+    });
   });
 };
 
