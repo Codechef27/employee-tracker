@@ -1,13 +1,9 @@
 // GIVEN a command-line application that accepts user input
 
 // View employees by manager.
-
 // View employees by department.
-
-// Delete departments, roles, and employees.
-
 // View the total utilized budget of a department—in other words, the combined salaries of all employees 
-//in that department.
+// in that department.
 
 const db = require('./db/connection');
 const inquirer = require('inquirer');
@@ -33,8 +29,7 @@ const options = () => {
                     { name: 'Add a Role', value: 5 },
                     { name: 'Add an employee', value: 6 },
                     { name: 'Update an employee role', value: 7 },
-                    { name: 'Quit' , value: 8}
-
+                    { name: 'Quit' , value: 8},                
                 ]
 
             }
@@ -52,12 +47,10 @@ const options = () => {
         } else if (data.choices === 5) {
             addRole();
         } else if (data.choices === 6) {
-          addEmployee();
+            addEmployee();
         } else if (data.choices === 7) {
-          updateEmployeeRole();
-        }
-        
-        else if (data.choices === 8) {
+            updateEmployeeRole();
+        } else if (data.choices === 8) {
             db.end();
         }
     })
@@ -329,6 +322,7 @@ updateEmployeeRole = () => {
   });
 };
 
+// Delete departments, roles, and employees.
 
 
 options();
